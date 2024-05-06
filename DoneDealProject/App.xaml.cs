@@ -1,4 +1,6 @@
-﻿namespace DoneDealProject
+﻿using DoneDealProject.View;
+
+namespace DoneDealProject
 {
     public partial class App : Application
     {

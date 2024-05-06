@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DoneDealProject.Services;
+using DoneDealProject.View;
+using DoneDealProject.ViewModel;
+using Microsoft.Extensions.Logging;
 
 namespace DoneDealProject
 {
@@ -18,6 +21,9 @@ namespace DoneDealProject
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddTransient<MainPage>();
+            builder.Services.AddTransient<MainViewModel>();
 
             return builder.Build();
         }
