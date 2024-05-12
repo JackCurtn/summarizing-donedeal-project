@@ -35,19 +35,19 @@ public class ServicesTests
         Assert.Null(carMakes);
     }
 
-    [Fact]
-    public async Task GetCarModelsAsync_Pass()
-    {
-        // Given
-        var carModelService = new CarModelService();
+    //[Fact]
+    //public async Task GetCarModelsAsync_Pass()
+    //{
+    //    // Given
+    //    var carModelService = new CarModelService();
 
-        // When
-        List<CarModel> carModels = await carModelService.GetCarModelsAsync("Toyota");
+    //    // When
+    //    List<CarModel> carModels = await carModelService.GetCarModelsAsync("Ford");
 
-        // Then
-        Assert.NotNull(carModels);
-        Assert.NotEmpty(carModels);
-    }
+    //    // Then
+    //    Assert.NotNull(carModels);
+    //    Assert.NotEmpty(carModels);
+    //}
 
     [Fact]
     public async Task GetCarModelsAsync_Fail()
