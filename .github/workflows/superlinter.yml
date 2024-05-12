@@ -1,0 +1,44 @@
+name: super-linter
+run-name: ${{ github.actor }} is linting the code
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+  workflow_dispatch:
+      
+jobs:
+  lint-code:
+    #runs-on: windows-latest
+    runs-on: ubuntu-latest
+    
+    ############################################
+    # Grant status permission for MULTI_STATUS #
+    ############################################
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Full git history is needed to get a proper
+          # list of changed files within `super-linter`
+          fetch-depth: 0
+
+      # Run the superLinter
+      - name: Lint code base
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_ALL_CODEBASE: true
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+# Readme badge
+#[![GitHub Super-Linter](https://github.com/DocMilo/MAUITest/actions/workflows/codeLinting.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
+#GH Actions generated one
+#[![lint_code](https://github.com/Docmilo/MAUITest/actions/workflows/codeLinting.yml/badge.svg)](https://github.com/Docmilo/MAUITest/actions/workflows/codeLinting.yml)
