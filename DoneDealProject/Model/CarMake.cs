@@ -1,6 +1,6 @@
 ﻿namespace DoneDealProject.Model;
 
-public class CarMakes
+public class CarMake
 {
     public required string Name { get; set; }
 }

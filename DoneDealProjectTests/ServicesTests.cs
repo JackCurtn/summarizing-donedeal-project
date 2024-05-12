@@ -11,10 +11,10 @@ public class ServicesTests {
     public async Task GetCarMakesAsync_Success()
     {
         // Given
-        var carMakesService = new CarMakesService();
+        var carMakesService = new CarMakeService();
 
         // When
-        List<CarMakes> carMakes = await carMakesService.GetCarMakesAsync();
+        List<CarMake> carMakes = await carMakesService.GetCarMakesAsync();
 
         // Then
         Assert.NotNull(carMakes);
@@ -25,12 +25,39 @@ public class ServicesTests {
     public async Task GetCarMakesAsync_Fail()
     {
         // Given
-        var carMakesService = new CarMakesService();
+        var carMakesService = new CarMakeService();
 
         // When
-        List<CarMakes> carMakes = await carMakesService.GetCarMakesAsync("https://www.youtube.com");
+        List<CarMake> carMakes = await carMakesService.GetCarMakesAsync("https://www.youtube.com");
 
         // Then
         Assert.Null(carMakes);
+    }
+
+    [Fact]
+    public async Task GetCarModelsAsync_Pass()
+    {
+        // Given
+        var carModelService = new CarModelService();
+
+        // When
+        List<CarModel> carModels = await carModelService.GetCarModelsAsync("Toyota");
+
+        // Then
+        Assert.NotNull(carModels);
+        Assert.NotEmpty(carModels);
+    }
+
+    [Fact]
+    public async Task GetCarModelsAsync_Fail()
+    {
+        // Given
+        var carModelService = new CarModelService();
+
+        // When
+        List<CarModel> carModels = await carModelService.GetCarModelsAsync("Not A Valid Car Model");
+
+        // Then
+        Assert.Null(carModels);
     }
 }

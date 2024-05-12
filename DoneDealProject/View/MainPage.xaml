@@ -18,7 +18,18 @@
 
         <!-- Dropdown for selecting car make -->
         <Picker ItemsSource="{Binding CarMakes}"
+                SelectedItem="{Binding SelectedCarMake, Mode=TwoWay}"
                 Title="Select a car make"
+                TitleColor="Black"
+                FontSize="18"
+                TextColor="#9E0F0B"
+                BackgroundColor="#FFFFFF"
+                Margin="0,20,0,0" />
+
+        <!-- Dropdown for selecting car model -->
+        <Picker ItemsSource="{Binding CarModels}"
+                Title="Select a car model"
+                TitleColor="Black"
                 FontSize="18"
                 TextColor="#9E0F0B"
                 BackgroundColor="#FFFFFF"
