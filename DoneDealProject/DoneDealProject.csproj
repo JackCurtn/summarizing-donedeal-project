@@ -57,6 +57,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\CarModels.csv" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiAsset Include="CarModels.csv" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.11.61" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace DoneDealProjectTests;
 
-public class ServicesTests { 
+public class ServicesTests
+{
     [Fact]
     public async Task GetCarMakesAsync_Success()
     {

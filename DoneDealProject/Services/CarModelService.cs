@@ -23,30 +23,34 @@ public class CarModelService
             return null;
         }
     }
-
     private async Task<List<CarModel>> ReadCarModelsFromCSV()
     {
         List<CarModel> carModels = new List<CarModel>();
 
-        // CSV file containing car models 
-        string csvFilePath = "C:\\Users\\JCurt\\source\\repos\\DoneDealProject\\DoneDealProject\\Resources\\CarModels.csv"; //Path.Combine(FileSystem.AppDataDirectory, "Resources", "CarModels.csv");
-
         try
         {
-            // Read lines from CSV
-            string[] lines = await File.ReadAllLinesAsync(csvFilePath);
-
-            // Parse each line and create CarModel
-            foreach (string line in lines)
+            // Open the Maui asset file "CarModels.csv"
+            using (Stream stream = await FileSystem.OpenAppPackageFileAsync("CarModels.csv"))
+            using (StreamReader reader = new StreamReader(stream))
             {
-                string[] parts = line.Split(',');
-                if (parts.Length >= 2)
+                // Read the content of the file
+                string content = await reader.ReadToEndAsync();
+
+                // Split the content into lines
+                string[] lines = content.Split(Environment.NewLine);
+
+                // Parse each line and create CarModel
+                foreach (string line in lines)
                 {
-                    carModels.Add(new CarModel
+                    string[] parts = line.Split(',');
+                    if (parts.Length >= 2)
                     {
-                        Make = parts[0].Trim(),
-                        Model = parts[1].Trim()
-                    });
+                        carModels.Add(new CarModel
+                        {
+                            Make = parts[0].Trim(),
+                            Model = parts[1].Trim()
+                        });
+                    }
                 }
             }
         }

@@ -61,8 +61,8 @@ public partial class MainViewModel : BaseViewModel
     private async void LoadCarModels()
     {
         if (!string.IsNullOrEmpty(SelectedCarMake))
-        CarModels.Clear();
         {
+            CarModels.Clear();
             List<CarModel> carModelsList = await _carModelService.GetCarModelsAsync(SelectedCarMake);
             if (carModelsList != null)
             {
