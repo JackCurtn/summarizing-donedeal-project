@@ -58,7 +58,7 @@ public partial class MainViewModel : BaseViewModel
         _carMakesService = new CarMakeService();
         _carModelService = new CarModelService();
         _carYearService = new CarYearService();
-        
+
         CarMakes = new ObservableCollection<string>();
         CarModels = new ObservableCollection<string>();
         YearRange = new ObservableCollection<int>();
