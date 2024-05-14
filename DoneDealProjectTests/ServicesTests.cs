@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DoneDealProjectTests;
 
@@ -35,6 +38,16 @@ public class ServicesTests
         Assert.Null(carMakes);
     }
 
+    [Fact]
+    public async Task GetCarMakesAsync_InvalidURL()
+    {
+        // Given
+        var carMakesService = new CarMakeService();
+
+        // When and Then
+        await Assert.ThrowsAsync<InvalidOperationException>(() => carMakesService.GetCarMakesAsync("Not A Valid URL"));
+    }
+
     //[Fact]
     //public async Task GetCarModelsAsync_Pass()
     //{
@@ -60,5 +73,43 @@ public class ServicesTests
 
         // Then
         Assert.Null(carModels);
+    }
+
+    [Fact]
+    public async Task GetYearRangeAsync_Success()
+    {
+        // Given
+        var carYearService = new CarYearService();
+
+        // When
+        (int fromYear, int toYear) = await carYearService.GetYearRangeAsync();
+
+        // Then
+        Assert.True(fromYear > 0 && toYear > 0, "From and To Year are > 0");
+        Assert.True(fromYear <= toYear, "From Year is less than or equal to To Year");
+    }
+
+    [Fact]
+    public async Task GetYearRangeAsync_Fail()
+    {
+        // Given
+        var carYearService = new CarYearService();
+
+        // When
+        (int fromYear, int toYear) = await carYearService.GetYearRangeAsync("https://www.youtube.com");
+
+        // Then (Default values)
+        Assert.Equal(2000, fromYear);
+        Assert.Equal(2024, toYear);
+    }
+
+    [Fact]
+    public async Task GetYearRangeAsync_InvalidURL()
+    {
+        // Given
+        var carYearService = new CarYearService();
+
+        // When and Then
+        await Assert.ThrowsAsync<InvalidOperationException>(() => carYearService.GetYearRangeAsync("Not A Valid URL"));
     }
 }

@@ -34,11 +34,15 @@
                 TextColor="#9E0F0B"
                 BackgroundColor="#FFFFFF"
                 Margin="0,20,0,0" />
-        
-        <Label 
-            Text="Test"
-            TextColor="#9E0F0B"
-            FontSize="24"/>
 
+        <!-- Picker for selecting a year -->
+        <Picker ItemsSource="{Binding YearRange}"
+                SelectedItem="{Binding SelectedYear, Mode=TwoWay}"
+                Title="Select a year"
+                TitleColor="Black"
+                FontSize="18"
+                TextColor="#9E0F0B"
+                BackgroundColor="#FFFFFF"
+                Margin="0,20,0,0" />
     </StackLayout>
 </ContentPage>

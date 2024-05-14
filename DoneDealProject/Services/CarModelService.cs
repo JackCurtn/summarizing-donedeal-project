@@ -36,8 +36,8 @@ public class CarModelService
                 // Read the content of the file
                 string content = await reader.ReadToEndAsync();
 
-                // Split the content into lines
-                string[] lines = content.Split(Environment.NewLine);
+                // Split the content into lines using newline character '\n'
+                string[] lines = content.Split('\n');
 
                 // Parse each line and create CarModel
                 foreach (string line in lines)
