@@ -26,7 +26,7 @@ public class CarMakeService
                 var dropdownItems = doc.DocumentNode.SelectNodes("//li[contains(@class, 'CustomSelect__ListItem-sc-1j4ks7m-2')]//button//span");
                 if (dropdownItems != null)
                 {
-                    var carMakes = dropdownItems.Select(item => new CarMake { Name = item.InnerText.Trim() }).ToList();
+                    var carMakes = dropdownItems.Select(item => new CarMake { Make = item.InnerText.Trim() }).ToList();
                     return carMakes;
                 }
                 else

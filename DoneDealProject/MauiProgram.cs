@@ -24,6 +24,8 @@ namespace DoneDealProject
 
             builder.Services.AddTransient<MainPage>();
             builder.Services.AddTransient<MainViewModel>();
+            builder.Services.AddTransient<SummaryPage>();
+            builder.Services.AddTransient<SummaryViewModel>();
 
             return builder.Build();
         }
