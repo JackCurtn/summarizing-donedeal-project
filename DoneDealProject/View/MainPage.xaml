@@ -28,6 +28,7 @@
 
         <!-- Dropdown for selecting car model -->
         <Picker ItemsSource="{Binding CarModels}"
+                SelectedItem="{Binding SelectedCarModel, Mode=TwoWay}"
                 Title="Select a car model"
                 TitleColor="Black"
                 FontSize="18"
@@ -43,6 +44,17 @@
                 FontSize="18"
                 TextColor="#9E0F0B"
                 BackgroundColor="#FFFFFF"
+                Margin="0,20,0,0" />
+
+        <!-- Button to navigate to SummaryPage -->
+        <Button Text="View Car Details"
+                Command="{Binding NavigateToSummaryPageCommand}"
+                IsEnabled="{Binding IsSummaryPageEnabled}"
+                HorizontalOptions="Center"
+                VerticalOptions="CenterAndExpand"
+                FontSize="18"
+                TextColor="#FFFFFF"
+                BackgroundColor="#9E0F0B"
                 Margin="0,20,0,0" />
     </StackLayout>
 </ContentPage>
