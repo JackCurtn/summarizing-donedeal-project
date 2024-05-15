@@ -4,9 +4,9 @@ namespace DoneDealProject.View;
 
 public partial class SummaryPage : ContentPage
 {
-	public SummaryPage(SummaryViewModel viewModel)
-	{
-		InitializeComponent();
-		BindingContext = viewModel;
-	}
+    public SummaryPage(SummaryViewModel viewModel)
+    {
+        InitializeComponent();
+        BindingContext = viewModel;
+    }
 }
