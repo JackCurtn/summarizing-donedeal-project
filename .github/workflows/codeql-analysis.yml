@@ -21,7 +21,7 @@ jobs:
   analyze:
 
     name: analyze
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     strategy:
       fail-fast: false
@@ -32,7 +32,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
+        fetch-depth: 2
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
         dotnet-version: 8.0.x
+      
+    - name: Install MAUI workload
+      run: dotnet workload install maui
+    
+    - name: Restore dependencies
+      run: dotnet restore
 
     - run: git checkout HEAD^2
       if: ${{ github.event_name == 'pull_request' }}
@@ -42,8 +53,9 @@ jobs:
       with:
         languages: ${{ matrix.language }}
 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v1
+    # Replaced Autobuild with custom build as auto build was not working correctly
+    - name: Build
+      run: dotnet build --no-restore
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1
