@@ -8,8 +8,12 @@ namespace DoneDealProject.Model;
 
 public class CarDetail
 {
+    public string Make { get; set; }
+    public string Model { get; set; }
+    public int Year { get; set; }
     public required string AdvertisementName { get; set; }
+    public double Price { get; set; }
     public string EngineSize { get; set; }
-    public string Mileage { get; set; }
-    public string Price { get; set; }
+    public int Mileage { get; set; }
+    public string Location { get; set; }
 }
