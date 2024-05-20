@@ -7,10 +7,73 @@
              x:DataType="viewmodel:SummaryViewModel"
              Title="{Binding Title}"
              BackgroundColor="#F2F2F2">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+
+    <Grid Padding="20"
+          RowDefinitions="Auto,Auto,Auto,*">
+
+        <!-- Replace this with the Make, Model and year of the car -->
+        <Label Grid.Row="0"
+               Text="Car Details"
+               TextColor="#9E0F0B"
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="CenterAndExpand"
+               VerticalOptions="CenterAndExpand" />
+
+        <!-- Dropdown for selecting engine size -->
+        <Picker Grid.Row="1"
+                ItemsSource="{Binding EngineSizes}"
+                SelectedItem="{Binding SelectedEngineSize, Mode=TwoWay}"
+                Title="Select Engine Size"
+                TitleColor="Black"
+                FontSize="18"
+                TextColor="#9E0F0B"
+                BackgroundColor="#FFFFFF"
+                Margin="0,20,0,0" />
+
+        <!-- Summary Values -->
+        <StackLayout Grid.Row="2"
+                     Orientation="Horizontal"
+                     HorizontalOptions="Center"
+                     Spacing="30">
+            <Label Text="Average Mileage:"
+                   TextColor="Black"
+                   FontSize="18"
+                   VerticalOptions="Center"/>
+            <Label Text="{Binding AverageMileage, StringFormat='{}{0:N0}'}"
+                   TextColor="#9E0F0B"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"/>
+            <Label Text="Average Cost:"
+                   TextColor="Black"
+                   FontSize="18"
+                   VerticalOptions="Center"/>
+            <Label Text="{Binding AverageCost, StringFormat='€{0:N0}'}"
+                   TextColor="#9E0F0B"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   VerticalOptions="Center"/>
+        </StackLayout>
+
+        <!-- Collection of each car advert based on the engine size the user selected-->
+        <CollectionView Grid.Row="3"
+                        ItemsSource="{Binding CarDetails}"
+                        Margin="10"
+                        VerticalOptions="FillAndExpand">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:CarDetail">
+                    <Frame BorderColor="LightGray" Padding="10" Margin="5" BackgroundColor="#FFFFFF">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding AdvertisementName}" FontSize="18" FontAttributes="Bold" TextColor="#9E0F0B"/>
+                            <Label Text="{Binding Price, StringFormat='€{0:N0}'}" FontSize="16" TextColor="Green"/>
+                            <Label Text="{Binding EngineSize}" FontSize="14" TextColor="Black"/>
+                            <Label Text="{Binding Mileage, StringFormat='{}{0:N0}'}" FontSize="14" TextColor="Black"/>
+                            <Label Text="{Binding Location}" FontSize="14" TextColor="Black"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>

@@ -5,62 +5,125 @@ namespace DoneDealProject.Services;
 
 public class CarDetailService
 {
-    public const string DONEDEAL_URL = "https://www.donedeal.ie/cars";
-
     public async Task<List<CarDetail>> GetCarDetailsAsync(string selectedCarMake, string selectedCarModel, int selectedYear)
     {
-        string url = $"{DONEDEAL_URL}/{selectedCarMake}/{selectedCarModel}/{selectedYear}";
+        int start = 0;
+        int pageSize = 30;
+        List<CarDetail> carDetails = new List<CarDetail>();
+
         string userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3";
 
         using (HttpClient client = new HttpClient())
         {
             client.DefaultRequestHeaders.Add("User-Agent", userAgent);
 
-            HttpResponseMessage response = await client.GetAsync(url);
-            if (response.IsSuccessStatusCode)
+            while (true)
             {
-                string htmlContent = await response.Content.ReadAsStringAsync();
-                HtmlDocument doc = new HtmlDocument();
-                doc.LoadHtml(htmlContent);
+                string url = $"https://www.donedeal.ie/cars/{selectedCarMake}/{selectedCarModel}/{selectedYear}?start={start}";
 
-                // Find the ul element containing the advertisement containers
-                var adList = doc.DocumentNode.SelectSingleNode("//ul[@class='Listingsstyled__List-sc-bgdxad-0' and @data-testid='card-list']");
-                var adContainers = doc.DocumentNode.SelectNodes("//ul[@class='Listingsstyled__List-sc-bgdxad-0' and @data-testid='card-list']");
-                if (adContainers != null)
+                HttpResponseMessage response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
                 {
-                    List<CarDetail> carDetailsList = new List<CarDetail>();
+                    string htmlContent = await response.Content.ReadAsStringAsync();
+                    HtmlDocument doc = new HtmlDocument();
+                    doc.LoadHtml(htmlContent);
 
-                    foreach (var adContainer in adContainers)
+                    var adContainers = doc.DocumentNode.SelectNodes("//li[starts-with(@data-testid, 'listing-card-index')]");
+
+                    if (adContainers != null)
                     {
-                        var adNameNode = adContainer.SelectSingleNode(".//p[contains(@class, 'BasicHeaderstyled__Title')]");
-                        var engineSizeNode = adContainer.SelectNodes(".//li[contains(@class, 'BasicHeaderstyled__KeyInfoItem')]");
-                        var mileageNode = engineSizeNode?[1];
-                        var priceNode = adContainer.SelectSingleNode(".//p[contains(@class, 'Pricestyled__Text')]");
+                        bool lastPage = true;
 
-                        if (adNameNode != null && engineSizeNode != null && mileageNode != null && priceNode != null)
+                        foreach (var adContainer in adContainers)
                         {
-                            CarDetail carDetail = new CarDetail
+                            // Check if ad is a sponsored ad - if it is then skip it
+                            if (adContainer.SelectSingleNode(".//p[contains(@class, 'WithHighlightstyled__Highlight')]") != null)
                             {
-                                AdvertisementName = adNameNode.InnerText.Trim(),
-                                EngineSize = engineSizeNode[1].InnerText.Trim(),
-                                Mileage = engineSizeNode[2].InnerText.Trim(),
-                                Price = priceNode.InnerText.Trim()
-                            };
-                            carDetailsList.Add(carDetail);
+                                continue;
+                            }
+
+                            // This means that there was at least one ad on the page and that was not a sponsored ad
+                            lastPage = false;
+
+                            // Extract details from each ad container
+                            var adNameNode = adContainer.SelectSingleNode(".//p[contains(@class, 'BasicHeaderstyled__Title')]");
+                            var priceNode = adContainer.SelectSingleNode(".//p[contains(@class, 'Pricestyled__Text')]");
+
+                            // 1 - Year, 2 - Engine Size, 3 - Mileage, 4 - Time since Posted, 5 - Location
+                            var engineSizeNode = adContainer.SelectSingleNode(".//li[contains(@class, 'BasicHeaderstyled__KeyInfoItem')][2]");
+                            var mileageNode = adContainer.SelectSingleNode(".//li[contains(@class, 'BasicHeaderstyled__KeyInfoItem')][3]");
+                            var locationNode = adContainer.SelectSingleNode(".//li[contains(@class, 'BasicHeaderstyled__KeyInfoItem')][5]");
+
+                            if (adNameNode != null && priceNode != null && engineSizeNode != null && mileageNode != null && locationNode != null)
+                            {
+                                string priceString = priceNode.InnerText.Trim().Replace("€", "").Replace(",", "");
+                                double price;
+                                bool priceParsedSuccessfully = double.TryParse(priceString, out price);
+                                int? mileage;
+
+                                // Try parsing mileage only if price is parsed successfully
+                                if (priceParsedSuccessfully && (mileage = ParseMileage(mileageNode.InnerText.Trim())).HasValue)
+                                {
+                                    // Add car detail only if both price and mileage are valid
+                                    carDetails.Add(new CarDetail
+                                    {
+                                        Make = selectedCarMake,
+                                        Model = selectedCarModel,
+                                        Year = selectedYear,
+                                        AdvertisementName = adNameNode.InnerText.Trim(),
+                                        Price = price,
+                                        EngineSize = engineSizeNode.InnerText.Trim(),
+                                        Mileage = mileage.Value,
+                                        Location = locationNode.InnerText.Trim()
+                                    });
+                                }
+                            }
+                        }
+
+                        // If only sponsored ads were found, break the while loop
+                        if (lastPage)
+                        {
+                            Console.WriteLine("No more ads to scrape.");
+                            break;
                         }
                     }
-
-                    return carDetailsList;
+                    else
+                    {
+                        Console.WriteLine("No more ads to scrape.");
+                        break;
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Ad containers not found.");
+                    Console.WriteLine($"Response not successful: {response.StatusCode}");
+                    break;
                 }
+
+                start += pageSize;
             }
-            else
+        }
+
+        return carDetails;
+    }
+
+    // int? as it can be null if parsing fails
+    private int? ParseMileage(string mileageString)
+    {
+        int mileage;
+
+        // Split the string into parts and extract mileageValue
+        string[] parts = mileageString.Trim().Split(' ');
+        string mileageValue = parts[0].Replace(",", "");
+
+        // First part should be the mileage value
+        if (int.TryParse(mileageValue, out mileage))
+        {
+            if (parts.Length > 1 && parts[1].ToLower() == "km")
             {
-                Console.WriteLine($"Response not successful: : {response.StatusCode}");
+                // Convert km to mi
+                mileage = (int)Math.Round(mileage * 0.621371);
             }
+            return mileage;
         }
 
         return null;
