@@ -2,6 +2,6 @@
 
 public class CarModel
 {
-    public required string Make { get; set; }
-    public required string Model { get; set; }
+    public string Make { get; set; }
+    public string Model { get; set; }
 }

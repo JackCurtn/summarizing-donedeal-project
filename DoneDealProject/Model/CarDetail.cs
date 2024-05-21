@@ -2,16 +2,16 @@
 
 namespace DoneDealProject.Model;
 
-public class CarDetail: ObservableObject
+public class CarDetail : ObservableObject
 {
-    public required string Make { get; set; }
-    public required string Model { get; set; }
-    public required int Year { get; set; }
-    public required string AdvertisementName { get; set; }
-    public required double Price { get; set; }
-    public required string EngineSize { get; set; }
-    public required int Mileage { get; set; }
-    public required string Location { get; set; }
+    public string Make { get; set; }
+    public string Model { get; set; }
+    public int Year { get; set; }
+    public string AdvertisementName { get; set; }
+    public double Price { get; set; }
+    public string EngineSize { get; set; }
+    public int Mileage { get; set; }
+    public string Location { get; set; }
     public string Url { get; set; }
 
     private bool _isHighlighted;

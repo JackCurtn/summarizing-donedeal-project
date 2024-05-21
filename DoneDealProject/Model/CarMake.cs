@@ -2,5 +2,5 @@
 
 public class CarMake
 {
-    public required string Make { get; set; }
+    public string Make { get; set; }
 }
