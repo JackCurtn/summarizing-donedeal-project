@@ -48,13 +48,14 @@ public class CarDetailService
                             // Extract details from each ad container
                             var adNameNode = adContainer.SelectSingleNode(".//p[contains(@class, 'BasicHeaderstyled__Title')]");
                             var priceNode = adContainer.SelectSingleNode(".//p[contains(@class, 'Pricestyled__Text')]");
+                            var urlNode = adContainer.SelectSingleNode(".//a[contains(@class, 'SearchCardstyled__CardLink')]");
 
                             // 1 - Year, 2 - Engine Size, 3 - Mileage, 4 - Time since Posted, 5 - Location
                             var engineSizeNode = adContainer.SelectSingleNode(".//li[contains(@class, 'BasicHeaderstyled__KeyInfoItem')][2]");
                             var mileageNode = adContainer.SelectSingleNode(".//li[contains(@class, 'BasicHeaderstyled__KeyInfoItem')][3]");
                             var locationNode = adContainer.SelectSingleNode(".//li[contains(@class, 'BasicHeaderstyled__KeyInfoItem')][5]");
 
-                            if (adNameNode != null && priceNode != null && engineSizeNode != null && mileageNode != null && locationNode != null)
+                            if (engineSizeNode != null && mileageNode != null && locationNode != null)
                             {
                                 string priceString = priceNode.InnerText.Trim().Replace("€", "").Replace(",", "");
                                 double price;
@@ -72,9 +73,10 @@ public class CarDetailService
                                         Year = selectedYear,
                                         AdvertisementName = adNameNode.InnerText.Trim(),
                                         Price = price,
-                                        EngineSize = engineSizeNode.InnerText.Trim(),
+                                        EngineSize = ParseEngineSize(engineSizeNode.InnerText.Trim()),
                                         Mileage = mileage.Value,
-                                        Location = locationNode.InnerText.Trim()
+                                        Location = locationNode.InnerText.Trim(),
+                                        Url = "www.donedeal.ie" + urlNode.OuterHtml.Split('"')[1]
                                     });
                                 }
                             }
@@ -127,5 +129,16 @@ public class CarDetailService
         }
 
         return null;
+    }
+
+    // Something EngineSize appears as "X Petrol Hybrid" so transform to "X Hybrid"
+    private string ParseEngineSize(string engineSizeString)
+    {
+        if (engineSizeString.ToLower().Contains("hybrid"))
+        {
+            string[] parts = engineSizeString.Split(' ');
+            return $"{parts[0]} Hybrid";
+        }
+        return engineSizeString;
     }
 }

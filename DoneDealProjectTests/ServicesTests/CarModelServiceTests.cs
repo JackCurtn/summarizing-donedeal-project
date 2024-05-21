@@ -22,9 +22,10 @@ public class CarModelServiceTests
     {
         // Given
         var carModelService = new CarModelService();
+        var carModel = "Not A Valid Car Model";
 
         // When
-        List<CarModel> carModels = await carModelService.GetCarModelsAsync("Not A Valid Car Model");
+        List<CarModel> carModels = await carModelService.GetCarModelsAsync(carModel);
 
         // Then
         Assert.Null(carModels);
