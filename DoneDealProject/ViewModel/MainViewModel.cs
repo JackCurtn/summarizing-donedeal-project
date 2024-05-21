@@ -155,7 +155,9 @@ public partial class MainViewModel : BaseViewModel
             List<CarModel> carModelsList = await _carModelService.GetCarModelsAsync(SelectedCarMake);
             if (carModelsList != null)
             {
-                foreach (var carModel in carModelsList)
+                // Sort car models alphabetically by the Model property
+                var sortedCarModels = carModelsList.OrderBy(carModel => carModel.Model);
+                foreach (var carModel in sortedCarModels)
                 {
                     CarModels.Add(carModel.Model);
                 }

@@ -21,9 +21,10 @@ public class CarMakesServiceTests
     {
         // Given
         var carMakesService = new CarMakeService();
+        string url = "https://www.youtube.com";
 
         // When
-        List<CarMake> carMakes = await carMakesService.GetCarMakesAsync("https://www.youtube.com");
+        List<CarMake> carMakes = await carMakesService.GetCarMakesAsync(url);
 
         // Then
         Assert.Null(carMakes);
@@ -34,8 +35,9 @@ public class CarMakesServiceTests
     {
         // Given
         var carMakesService = new CarMakeService();
+        string url = "Not A Valid URL";
 
         // When and Then
-        await Assert.ThrowsAsync<InvalidOperationException>(() => carMakesService.GetCarMakesAsync("Not A Valid URL"));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => carMakesService.GetCarMakesAsync(url));
     }
 }

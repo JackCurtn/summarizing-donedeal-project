@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using DoneDealProject.Model;
 using DoneDealProject.Services;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace DoneDealProject.ViewModel;
 
@@ -9,6 +11,9 @@ public partial class SummaryViewModel : BaseViewModel
 {
     private CarDetailService _carDetailService;
     private ObservableCollection<CarDetail> _allCarDetails;
+
+    [ObservableProperty]
+    string selectedCar;
 
     [ObservableProperty]
     private ObservableCollection<CarDetail> _carDetails;
@@ -28,6 +33,7 @@ public partial class SummaryViewModel : BaseViewModel
     public SummaryViewModel(string selectedCarMake, string selectedCarModel, int selectedYear)
     {
         Title = "Summary Page";
+        SelectedCar = $"{selectedYear} {selectedCarMake} {selectedCarModel}";
 
         _carDetailService = new CarDetailService();
 
@@ -41,6 +47,12 @@ public partial class SummaryViewModel : BaseViewModel
     {
         var carDetails = await _carDetailService.GetCarDetailsAsync(selectedCarMake, selectedCarModel, selectedYear);
         _allCarDetails = new ObservableCollection<CarDetail>(carDetails);
+        if (!_allCarDetails.Any())
+        {
+            await Shell.Current.DisplayAlert("No Cars Found", "No cars found for the selected make, model, and year.", "OK");
+            await Shell.Current.GoToAsync(".."); // .. goes back to the previous page
+            return;
+        }
         CarDetails = new ObservableCollection<CarDetail>(carDetails);
         EngineSizes = new ObservableCollection<string>(_allCarDetails.Select(c => c.EngineSize).Distinct());
         EngineSizes.Insert(0, "All");
@@ -63,19 +75,16 @@ public partial class SummaryViewModel : BaseViewModel
             CarDetails = new ObservableCollection<CarDetail>(_allCarDetails.Where(c => c.EngineSize == SelectedEngineSize));
         }
         UpdateAverages();
+
+        foreach (var carDetail in CarDetails)
+        {
+            carDetail.IsHighlighted = carDetail.Price <= AverageCost && carDetail.Mileage <= AverageMileage;
+        }
     }
 
     private void UpdateAverages()
     {
-        if (CarDetails.Count > 0)
-        {
-            AverageMileage = CarDetails.Average(c => c.Mileage);
-            AverageCost = CarDetails.Average(c => c.Price);
-        }
-        else
-        {
-            AverageMileage = 0;
-            AverageCost = 0;
-        }
+        AverageMileage = CarDetails.Average(c => c.Mileage);
+        AverageCost = CarDetails.Average(c => c.Price);
     }
 }
