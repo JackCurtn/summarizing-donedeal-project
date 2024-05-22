@@ -63,7 +63,7 @@ public class CarDetailService
                                 int? mileage;
 
                                 // Try parsing mileage only if price is parsed successfully
-                                if (priceParsedSuccessfully && (mileage = ParseMileage(mileageNode.InnerText.Trim())).HasValue)
+                                if (price > 0 && priceParsedSuccessfully && (mileage = ParseMileage(mileageNode.InnerText.Trim())).HasValue)
                                 {
                                     // Add car detail only if both price and mileage are valid
                                     carDetails.Add(new CarDetail
