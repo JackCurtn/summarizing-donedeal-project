@@ -8,14 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using DoneDealProject.View;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace DoneDealProject.ViewModel;
 
-public partial class MainViewModel : BaseViewModel
+public partial class MainViewModel : ObservableObject
 {
     private CarMakeService _carMakesService;
     private CarYearService _carYearService;
     private CarModelService _carModelService;
+
+    [ObservableProperty]
+    string title;
 
     public ObservableCollection<string> CarMakes { get; set; }
     public ObservableCollection<int> YearRange { get; set; }

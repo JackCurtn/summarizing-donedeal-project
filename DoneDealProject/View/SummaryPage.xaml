@@ -11,7 +11,7 @@
     <Grid Padding="20"
           RowDefinitions="Auto,Auto,Auto,*">
 
-        <!-- Replace this with the Make, Model and year of the car -->
+        <!-- Label to show the car the user has selected -->
         <Label Grid.Row="0"
                Text="{Binding SelectedCar}"
                TextColor="#9E0F0B"
@@ -40,7 +40,6 @@
 
             <!-- Count of Cars -->
             <Frame Padding="10"
-                   HasShadow="False"
                    BackgroundColor="#F0F0F0"
                    CornerRadius="5">
                 <StackLayout>
@@ -48,7 +47,7 @@
                            TextColor="Black"
                            FontSize="18"
                            HorizontalOptions="Center"/>
-                    <Label Text="{Binding CarDetails.Count, StringFormat='{}{0:N0}'}"
+                    <Label Text="{Binding CarDetails.Count, StringFormat='{0:N0}'}"
                            TextColor="#9E0F0B"
                            FontSize="18"
                            FontAttributes="Bold"
@@ -58,7 +57,6 @@
 
             <!-- Average Mileage -->
             <Frame Padding="10"
-                   HasShadow="False"
                    BackgroundColor="#F0F0F0"
                    CornerRadius="5">
                 <StackLayout>
@@ -66,7 +64,7 @@
                            TextColor="Black"
                            FontSize="18"
                            HorizontalOptions="Center"/>
-                    <Label Text="{Binding AverageMileage, StringFormat='{}{0:N0}'}"
+                    <Label Text="{Binding AverageMileage, StringFormat='{0:N0}'}"
                            TextColor="#9E0F0B"
                            FontSize="18"
                            FontAttributes="Bold"
@@ -76,15 +74,14 @@
 
             <!-- Average Cost -->
             <Frame Padding="10"
-                   HasShadow="False"
                    BackgroundColor="#F0F0F0"
                    CornerRadius="5">
                 <StackLayout>
-                    <Label Text="Average Cost:"
+                    <Label Text="Average Price:"
                            TextColor="Black"
                            FontSize="18"
                            HorizontalOptions="Center"/>
-                    <Label Text="{Binding AverageCost, StringFormat='€{0:N0}'}"
+                    <Label Text="{Binding AveragePrice, StringFormat='€{0:N0}'}"
                            TextColor="#9E0F0B"
                            FontSize="18"
                            FontAttributes="Bold"
@@ -122,6 +119,5 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
     </Grid>
 </ContentPage>

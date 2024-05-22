@@ -7,10 +7,13 @@ using System.Windows.Input;
 
 namespace DoneDealProject.ViewModel;
 
-public partial class SummaryViewModel : BaseViewModel
-{
+public partial class SummaryViewModel : ObservableObject
+{    
     private CarDetailService _carDetailService;
     private ObservableCollection<CarDetail> _allCarDetails;
+
+    [ObservableProperty]
+    string title;
 
     [ObservableProperty]
     string selectedCar;
@@ -28,7 +31,7 @@ public partial class SummaryViewModel : BaseViewModel
     private double _averageMileage;
 
     [ObservableProperty]
-    private double _averageCost;
+    private double _averagePrice;
 
     public SummaryViewModel(string selectedCarMake, string selectedCarModel, int selectedYear)
     {
@@ -78,13 +81,13 @@ public partial class SummaryViewModel : BaseViewModel
 
         foreach (var carDetail in CarDetails)
         {
-            carDetail.IsHighlighted = carDetail.Price <= AverageCost && carDetail.Mileage <= AverageMileage;
+            carDetail.IsHighlighted = carDetail.Price <= AveragePrice && carDetail.Mileage <= AverageMileage;
         }
     }
 
     private void UpdateAverages()
     {
         AverageMileage = CarDetails.Average(c => c.Mileage);
-        AverageCost = CarDetails.Average(c => c.Price);
+        AveragePrice = CarDetails.Average(c => c.Price);
     }
 }
