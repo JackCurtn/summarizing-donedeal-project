@@ -8,7 +8,7 @@ using System.Windows.Input;
 namespace DoneDealProject.ViewModel;
 
 public partial class SummaryViewModel : ObservableObject
-{    
+{  
     private CarDetailService _carDetailService;
     private ObservableCollection<CarDetail> _allCarDetails;
 
